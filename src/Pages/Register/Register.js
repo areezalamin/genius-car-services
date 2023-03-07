@@ -1,19 +1,54 @@
-import React, { useState } from "react";
+import { async } from "@firebase/util";
+import React, { useRef, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import {
+  useCreateUserWithEmailAndPassword,
+  useUpdateProfile,
+} from "react-firebase-hooks/auth";
+import { Link, useNavigate } from "react-router-dom";
+import auth from "../../firebase.init";
+import SocialLogin from "../SocialLogin/SocialLogin";
 
 const Register = () => {
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth, { sendEmailVerification: true });
+  const [updateProfile] = useUpdateProfile(auth);
   const [validated, setValidated] = useState(false);
+  // const [agree, setAgree] = useState(false);
+  const [artifitialError, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const nameRef = useRef("");
+  const emailRef = useRef("");
+  const passwordRef = useRef("");
+  const confirmPasswordRef = useRef("");
+
+  const handleSubmit = async (event) => {
     const form = event.currentTarget;
+    const name = nameRef.current.value;
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
+    const confirmPassword = confirmPasswordRef.current.value;
+    console.log(email, password);
+
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
     }
-
+    event.preventDefault();
     setValidated(true);
+    if (user) {
+      console.log(user);
+    }
+
+    if (confirmPassword !== password) {
+      setError("** Please provide same password **");
+      return;
+    }
+    await createUserWithEmailAndPassword(email, password);
+    await updateProfile({ displayName: name });
+    navigate("/Home");
   };
+
   return (
     <Container>
       <div className=" d-flex justify-content-center">
@@ -25,32 +60,53 @@ const Register = () => {
         >
           <Form.Group md="6" controlId="validationCustom01">
             <Form.Label>Name</Form.Label>
-            <Form.Control type="text" placeholder="Name" required />
+            <Form.Control
+              ref={nameRef}
+              type="text"
+              placeholder="Name"
+              required
+            />
             <Form.Control.Feedback type="invalid">
               Please provide a valid Name.
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group md="3" controlId="validationCustom02">
             <Form.Label>Email</Form.Label>
-            <Form.Control type="Email" placeholder="Email" required />
+            <Form.Control
+              ref={emailRef}
+              type="Email"
+              placeholder="Email"
+              required
+            />
             <Form.Control.Feedback type="invalid">
               Please provide a valid Email.
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group md="3" controlId="validationCustom03">
             <Form.Label>Password</Form.Label>
-            <Form.Control type="Password" placeholder="Password" required />
+            <Form.Control
+              ref={passwordRef}
+              type="Password"
+              placeholder="Password"
+              required
+            />
             <Form.Control.Feedback type="invalid">
               Please provide a valid Password.
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group md="3" controlId="validationCustom04">
             <Form.Label>Confirm Password</Form.Label>
-            <Form.Control type="Password" placeholder="Password" required />
+            <Form.Control
+              ref={confirmPasswordRef}
+              type="Password"
+              placeholder="Password"
+              required
+            />
             <Form.Control.Feedback type="invalid">
               Please provide a valid Password.
             </Form.Control.Feedback>
           </Form.Group>
+          <p className="text-danger">{artifitialError}</p>
           <Form.Group className="mb-3">
             <Form.Check
               required
@@ -71,7 +127,9 @@ const Register = () => {
             </Link>
           </p>
         </Form>
+        <h5>{error?.message}</h5>
       </div>
+      <SocialLogin></SocialLogin>
     </Container>
   );
 };

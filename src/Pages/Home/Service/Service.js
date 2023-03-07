@@ -1,13 +1,16 @@
 import React from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
+import auth from "../../../firebase.init";
 import "../Service/Service.css";
 
 const Service = ({ service }) => {
+  const [user] = useAuthState(auth);
   const { name, id, img, description, price } = service;
 
   const navigate = useNavigate();
   const handleServiceButton = (id) => {
-    navigate(`/Service/${id}`);
+    navigate(`Service/${id}`);
   };
   return (
     <div className="service">

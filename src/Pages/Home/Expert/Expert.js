@@ -14,7 +14,7 @@ const Expert = ({ expert }) => {
             bulk of the card's content.
           </p>
           <a href="#" className="btn btn-primary">
-            Go somewhere
+            Expert info
           </a>
         </div>
       </div>

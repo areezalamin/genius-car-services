@@ -1,10 +1,28 @@
 import React, { useRef, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import SocialLogin from "../SocialLogin/SocialLogin";
+import {
+  useSendEmailVerification,
+  useSendPasswordResetEmail,
+  useSignInWithEmailAndPassword,
+} from "react-firebase-hooks/auth";
+import auth from "../../firebase.init";
 import "./Login.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { async } from "@firebase/util";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [signInWithEmailAndPassword, user, error] =
+    useSignInWithEmailAndPassword(auth);
+  const [sendPasswordResetEmail] = useSendPasswordResetEmail(auth);
   const [validated, setValidated] = useState(false);
+
+  const location = useLocation();
+
+  let from = location.state?.form?.pathname || "/";
 
   const emailRef = useRef("");
   const passwordRef = useRef("");
@@ -17,13 +35,23 @@ const Login = () => {
     event.preventDefault();
     setValidated(true);
     const email = emailRef.current.value;
-    const Password = passwordRef.current.value;
-    console.log(email, Password);
+    const password = passwordRef.current.value;
+
+    signInWithEmailAndPassword(email, password);
+  };
+  if (user) {
+    console.log(user);
+    navigate(from, { replace: true });
+  }
+
+  const handleResetPassword = async () => {
+    const email = emailRef.current.value;
+    const success = await sendPasswordResetEmail(email);
+    if (success) {
+      toast("Sent email");
+    }
   };
 
-  const handleAddToRegister = () => {
-    console.log("I am working");
-  };
   return (
     <Container>
       <div className=" d-flex justify-content-center">
@@ -60,15 +88,22 @@ const Login = () => {
           <Button type="submit">Submit</Button>
           <p>
             New to Genius Car?
-            <Link
-              to="/Register"
-              className="text-danger text-decoration-none"
-              // onClick={handleAddToRegister}
-            >
+            <Link to="/Register" className="text-danger text-decoration-none">
               Please Register
             </Link>
           </p>
+          <p>
+            Forgotten password:
+            <button onClick={handleResetPassword} className="btn btn-link">
+              Reset Password
+            </button>
+          </p>
         </Form>
+        <ToastContainer></ToastContainer>
+        <h5>{error?.message}</h5>
+      </div>
+      <div>
+        <SocialLogin></SocialLogin>
       </div>
     </Container>
   );
