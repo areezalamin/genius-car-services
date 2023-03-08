@@ -12,10 +12,11 @@ import "./Login.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { async } from "@firebase/util";
+import Loading from "../Shared/Loading/Loading";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [signInWithEmailAndPassword, user, error] =
+  const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
   const [sendPasswordResetEmail] = useSendPasswordResetEmail(auth);
   const [validated, setValidated] = useState(false);
@@ -23,6 +24,10 @@ const Login = () => {
   const location = useLocation();
 
   let from = location.state?.form?.pathname || "/";
+
+  if (user) {
+    navigate(from, { replace: true });
+  }
 
   const emailRef = useRef("");
   const passwordRef = useRef("");
@@ -39,10 +44,6 @@ const Login = () => {
 
     signInWithEmailAndPassword(email, password);
   };
-  if (user) {
-    console.log(user);
-    navigate(from, { replace: true });
-  }
 
   const handleResetPassword = async () => {
     const email = emailRef.current.value;
@@ -51,6 +52,9 @@ const Login = () => {
       toast("Sent email");
     }
   };
+  if (loading) {
+    return <Loading></Loading>;
+  }
 
   return (
     <Container>

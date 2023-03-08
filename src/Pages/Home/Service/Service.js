@@ -10,7 +10,7 @@ const Service = ({ service }) => {
 
   const navigate = useNavigate();
   const handleServiceButton = (id) => {
-    navigate(`Service/${id}`);
+    navigate(`/Service/${id}`);
   };
   return (
     <div className="service">

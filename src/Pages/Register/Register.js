@@ -7,6 +7,7 @@ import {
 } from "react-firebase-hooks/auth";
 import { Link, useNavigate } from "react-router-dom";
 import auth from "../../firebase.init";
+import Loading from "../Shared/Loading/Loading";
 import SocialLogin from "../SocialLogin/SocialLogin";
 
 const Register = () => {
@@ -36,6 +37,10 @@ const Register = () => {
     }
     event.preventDefault();
     setValidated(true);
+
+    if (loading) {
+      return <Loading></Loading>;
+    }
     if (user) {
       console.log(user);
     }
