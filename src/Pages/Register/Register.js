@@ -8,6 +8,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import auth from "../../firebase.init";
 import Loading from "../Shared/Loading/Loading";
+import PageTitle from "../Shared/PageTitle/PageTitle";
 import SocialLogin from "../SocialLogin/SocialLogin";
 
 const Register = () => {
@@ -57,6 +58,7 @@ const Register = () => {
   return (
     <Container>
       <div className=" d-flex justify-content-center">
+        <PageTitle title="Register"></PageTitle>
         <Form
           className="w-50"
           noValidate

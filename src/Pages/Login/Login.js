@@ -12,6 +12,7 @@ import "./Login.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loading from "../Shared/Loading/Loading";
+import PageTitle from "../Shared/PageTitle/PageTitle";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -22,11 +23,7 @@ const Login = () => {
 
   const location = useLocation();
 
-  let from = location.state?.form?.pathname || "/";
-
-  if (user) {
-    navigate(from, { replace: true });
-  }
+  const from = location.state?.from?.pathname || "/";
 
   const emailRef = useRef("");
   const passwordRef = useRef("");
@@ -54,10 +51,14 @@ const Login = () => {
   if (loading) {
     return <Loading></Loading>;
   }
+  if (user) {
+    navigate(from, { replace: true });
+  }
 
   return (
     <Container>
       <div className=" d-flex justify-content-center">
+        <PageTitle title="Login"></PageTitle>
         <Form
           className="w-50"
           noValidate
