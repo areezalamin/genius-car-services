@@ -7,6 +7,7 @@ import {
 import React from "react";
 import * as Icon from "react-bootstrap-icons";
 import auth from "../../firebase.init";
+import Loading from "../Shared/Loading/Loading";
 
 const SocialLogin = () => {
   const [signInWithGoogle, googleUser, googleLoading, googleError] =
@@ -26,6 +27,10 @@ const SocialLogin = () => {
   const handleFacebookSignIn = () => {
     signInWithFacebook();
   };
+
+  if (googleLoading || githubLoading || facebookLoading) {
+    return <Loading></Loading>;
+  }
   return (
     <div>
       <div className="text-center text-danger">

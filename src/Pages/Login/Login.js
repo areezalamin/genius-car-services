@@ -11,7 +11,6 @@ import auth from "../../firebase.init";
 import "./Login.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { async } from "@firebase/util";
 import Loading from "../Shared/Loading/Loading";
 
 const Login = () => {
@@ -102,9 +101,9 @@ const Login = () => {
               Reset Password
             </button>
           </p>
+          <h5 className="text-danger">{error?.message}</h5>
         </Form>
         <ToastContainer></ToastContainer>
-        <h5>{error?.message}</h5>
       </div>
       <div>
         <SocialLogin></SocialLogin>

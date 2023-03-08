@@ -131,8 +131,8 @@ const Register = () => {
               Please Login
             </Link>
           </p>
+          <h5 className="text-danger">{error?.message}</h5>
         </Form>
-        <h5>{error?.message}</h5>
       </div>
       <SocialLogin></SocialLogin>
     </Container>
