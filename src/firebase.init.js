@@ -13,6 +13,7 @@ import { getAuth } from "firebase/auth";
 //   messagingSenderId: process.env.REACT_APP_messagingSenderId,
 //   appId: process.env.REACT_APP_appId,
 // };
+
 const firebaseConfig = {
   apiKey: "AIzaSyBob1sjmuVCuZgPSclKUgwCcuV0m3KsojE",
   authDomain: "genius-car-survices-bda4c.firebaseapp.com",

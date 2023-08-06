@@ -1,5 +1,4 @@
 import {
-  useAuthState,
   useSignInWithFacebook,
   useSignInWithGithub,
   useSignInWithGoogle,
@@ -8,6 +7,7 @@ import React from "react";
 import * as Icon from "react-bootstrap-icons";
 import auth from "../../firebase.init";
 import Loading from "../Shared/Loading/Loading";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SocialLogin = () => {
   const [signInWithGoogle, googleUser, googleLoading, googleError] =
@@ -16,6 +16,10 @@ const SocialLogin = () => {
     useSignInWithGithub(auth);
   const [signInWithFacebook, facebookUser, facebookLoading, facebookError] =
     useSignInWithFacebook(auth);
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    let from = location.state?.from?.pathname || '/';
 
   const handleGoogleSignIn = () => {
     signInWithGoogle();
@@ -30,7 +34,13 @@ const SocialLogin = () => {
 
   if (googleLoading || githubLoading || facebookLoading) {
     return <Loading></Loading>;
+  };
+
+  if(googleUser || githubUser || facebookUser){
+    navigate(from, {replace: true});
+    return null;
   }
+
   return (
     <div>
       <div className="text-center text-danger">
@@ -56,7 +66,7 @@ const SocialLogin = () => {
           <span className="ml-3">Google Sign In</span>
         </button>
         <button
-          onClick={handleGithubSignIN}
+          onClick={()=>handleGithubSignIN()}
           className="btn btn-success w-25 my-2"
         >
           <Icon.Github
@@ -66,7 +76,7 @@ const SocialLogin = () => {
         </button>
 
         <button
-          onClick={handleFacebookSignIn}
+          onClick={()=>handleFacebookSignIn()}
           className="btn btn-success w-25 my-2"
         >
           <Icon.Facebook

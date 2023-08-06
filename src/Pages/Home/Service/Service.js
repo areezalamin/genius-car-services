@@ -6,7 +6,7 @@ import "../Service/Service.css";
 
 const Service = ({ service }) => {
   const [user] = useAuthState(auth);
-  const { name, id, img, description, price } = service;
+  const { name, _id, img, description, price } = service;
 
   const navigate = useNavigate();
   const handleServiceButton = (id) => {
@@ -21,7 +21,7 @@ const Service = ({ service }) => {
         <small>{description}</small>
         <br></br>
         <button
-          onClick={() => handleServiceButton(id)}
+          onClick={() => handleServiceButton(_id)}
           className="btn btn-primary"
         >
           Books: {name}

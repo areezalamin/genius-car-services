@@ -9,10 +9,11 @@ import {
 } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
 import "./Login.css";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loading from "../Shared/Loading/Loading";
 import PageTitle from "../Shared/PageTitle/PageTitle";
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const Login = () => {
   const emailRef = useRef("");
   const passwordRef = useRef("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.stopPropagation();
@@ -38,7 +39,10 @@ const Login = () => {
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
 
-    signInWithEmailAndPassword(email, password);
+    await signInWithEmailAndPassword(email, password);
+
+    const {data} = await axios.post('https://genius-car-service-server-kappa.vercel.app/login', {email});
+    localStorage.setItem('accessToken', data.accessToken);
   };
 
   const handleResetPassword = async () => {
@@ -51,8 +55,8 @@ const Login = () => {
   if (loading) {
     return <Loading></Loading>;
   }
-  if (user) {
-    navigate(from, { replace: true });
+  if(user){
+    navigate(from, {replace: true});
   }
 
   return (
@@ -98,13 +102,13 @@ const Login = () => {
           </p>
           <p>
             Forgotten password:
-            <button onClick={handleResetPassword} className="btn btn-link">
+            <button onClick={()=>handleResetPassword()} className="btn btn-link">
               Reset Password
             </button>
           </p>
           <h5 className="text-danger">{error?.message}</h5>
         </Form>
-        <ToastContainer></ToastContainer>
+        
       </div>
       <div>
         <SocialLogin></SocialLogin>
